@@ -2,17 +2,24 @@ import UIKit
 
 final class MovieQuizViewController: UIViewController {
     
+    // MARK: - Constants
+    
+    private let boldFont: UIFont = UIFont(name: "YSDisplay-Bold", size: 23) ?? UIFont()
+    private let mediumFont: UIFont = UIFont(name: "YSDisplay-Medium", size: 20) ?? UIFont()
+    
     // MARK: - IBOutlets
     
     @IBOutlet private weak var mainImage: UIImageView!
     @IBOutlet private weak var questionLabel: UILabel!
     @IBOutlet private weak var buttonsStack: UIStackView!
     @IBOutlet private weak var counterLabel: UILabel!
+    @IBOutlet private weak var questionCounterLabel: UILabel!
     
     // MARK: - Properties
     
     private let questionManager = MokQuestionManager()
     private var questionCount: Int = 0
+    private var resultQuestionCount: Int = 0
     
     // MARK: - Lifecycle
     
@@ -22,6 +29,10 @@ final class MovieQuizViewController: UIViewController {
         view.backgroundColor = UIColor(named: "mainBackground")
         configureSubviews()
         setQuestion(question: questionManager.questions[questionCount])
+    }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
     
     // MARK: - IBActions
@@ -39,13 +50,17 @@ final class MovieQuizViewController: UIViewController {
     private func configureSubviews() {
         questionLabel.numberOfLines = 0
         questionLabel.lineBreakMode = .byWordWrapping
+        questionLabel.font = boldFont
+        
+        questionCounterLabel.font = mediumFont
+        counterLabel.font = mediumFont
         
         mainImage.layer.cornerRadius = 20
         
         buttonsStack.arrangedSubviews.forEach({ view in
             view.layer.cornerRadius = 15
             if let button = view as? UIButton {
-                button.titleLabel?.font = .systemFont(ofSize: 20, weight: .medium)
+                button.titleLabel?.font = mediumFont
             }
         })
     }
@@ -53,6 +68,7 @@ final class MovieQuizViewController: UIViewController {
     private func setQuestion(question: Question) {
         mainImage.image = UIImage(named: question.image)
         questionLabel.text = question.question
+        questionLabel.sizeToFit()
         counterLabel.text = "\(questionCount + 1)/\(questionManager.questions.count)"
         mainImage.layer.borderWidth = 0
     }
@@ -61,6 +77,10 @@ final class MovieQuizViewController: UIViewController {
         let colorName: String = questionManager.questions[questionCount].answer == answer
         ? "greenBorder"
         : "redBorder"
+        
+        if questionManager.questions[questionCount].answer == answer {
+            resultQuestionCount += 1
+        }
         
         mainImage.layer.borderWidth = 8
         mainImage.layer.borderColor = UIColor(named: colorName)?.cgColor
@@ -78,7 +98,12 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func createAlert() {
-        let alert = UIAlertController(title: "Раунд окончен", message: nil, preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: "Раунд окончен",
+            message: "Ваш результат: \(resultQuestionCount)/\(questionManager.questions.count)",
+            preferredStyle: .alert
+        )
+        
         let playAgainAction = UIAlertAction(
             title: "Сыграть еще раз",
             style: .default,
@@ -104,16 +129,16 @@ struct Question {
 
 struct MokQuestionManager {
     let questions: [Question] = [
-        .init(image: "The Godfather", rating: 9.2, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "The Dark Knight", rating: 9, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "Kill Bill", rating: 8.1, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "The Avengers", rating: 8, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "Deadpool", rating: 8, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "The Green Knight", rating: 6.6, question: "Рейтинг этого фильма больше чем 6?", answer: true),
-        .init(image: "Old", rating: 5.8, question: "Рейтинг этого фильма больше чем 6?", answer: false),
-        .init(image: "The Ice Age Adventures of Buck Wild", rating: 4.3, question: "Рейтинг этого фильма больше чем 6?", answer: false),
-        .init(image: "Tesla", rating: 5.1, question: "Рейтинг этого фильма больше чем 6?", answer: false),
-        .init(image: "Vivarium", rating: 5.8, question: "Рейтинг этого фильма больше чем 6?", answer: false)
+        Question(image: "The Godfather", rating: 9.2, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "The Dark Knight", rating: 9, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "Kill Bill", rating: 8.1, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "The Avengers", rating: 8, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "Deadpool", rating: 8, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "The Green Knight", rating: 6.6, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
+        Question(image: "Old", rating: 5.8, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
+        Question(image: "The Ice Age Adventures of Buck Wild", rating: 4.3, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
+        Question(image: "Tesla", rating: 5.1, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
+        Question(image: "Vivarium", rating: 5.8, question: "Рейтинг этого фильма\n больше чем 6?", answer: false)
     ]
 }
 
