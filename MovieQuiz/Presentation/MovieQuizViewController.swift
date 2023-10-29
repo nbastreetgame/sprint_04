@@ -109,6 +109,7 @@ final class MovieQuizViewController: UIViewController {
             style: .default,
             handler: { action in
                 self.questionCount = 0
+                self.resultQuestionCount = 0
                 self.setQuestion(
                     question: self.questionManager.questions[self.questionCount]
                 )
