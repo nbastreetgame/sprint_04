@@ -14,6 +14,8 @@ final class MovieQuizViewController: UIViewController {
     @IBOutlet private weak var buttonsStack: UIStackView!
     @IBOutlet private weak var counterLabel: UILabel!
     @IBOutlet private weak var questionCounterLabel: UILabel!
+    @IBOutlet private weak var noButton: UIButton!
+    @IBOutlet private weak var yesButton: UIButton!
     
     // MARK: - Properties
     
@@ -55,13 +57,13 @@ final class MovieQuizViewController: UIViewController {
         questionCounterLabel.font = mediumFont
         counterLabel.font = mediumFont
         
+        noButton.titleLabel?.font = mediumFont
+        yesButton.titleLabel?.font = mediumFont
+        
         mainImage.layer.cornerRadius = 20
         
         buttonsStack.arrangedSubviews.forEach({ view in
             view.layer.cornerRadius = 15
-            if let button = view as? UIButton {
-                button.titleLabel?.font = mediumFont
-            }
         })
     }
     
@@ -108,6 +110,7 @@ final class MovieQuizViewController: UIViewController {
             title: "Сыграть еще раз",
             style: .default,
             handler: { action in
+                self.resultQuestionCount = 0
                 self.questionCount = 0
                 self.resultQuestionCount = 0
                 self.setQuestion(

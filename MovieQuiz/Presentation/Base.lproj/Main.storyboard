@@ -101,8 +101,10 @@
                         <outlet property="buttonsStack" destination="IeK-eV-h9G" id="O06-aG-Tcq"/>
                         <outlet property="counterLabel" destination="ed6-9W-UZB" id="qmJ-9e-aeh"/>
                         <outlet property="mainImage" destination="zNN-wL-UIv" id="hmK-zl-NAl"/>
+                        <outlet property="noButton" destination="9CA-2H-BI0" id="7YI-ak-Egh"/>
                         <outlet property="questionCounterLabel" destination="3e1-Ey-GK5" id="uMl-h8-Jr7"/>
                         <outlet property="questionLabel" destination="DpZ-ra-Fyo" id="XsN-aE-1wb"/>
+                        <outlet property="yesButton" destination="QSe-vb-DKT" id="zTD-zd-5J6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
