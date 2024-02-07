@@ -6,6 +6,8 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
+//        UserDefaults.standard.setValue(0, forKey: "QuestionCountKey")
+//        UserDefaults.standard.setValue(0, forKey: "ResultQuestionCountKey")
         return true
     }
 
