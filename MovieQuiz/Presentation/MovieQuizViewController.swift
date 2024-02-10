@@ -1,6 +1,6 @@
 import UIKit
 
-final class MovieQuizViewController: UIViewController {
+final class MovieQuizViewController: UIViewController, ResultAlertPresenterDelegate {
     
     // MARK: - Constants
     
@@ -20,8 +20,22 @@ final class MovieQuizViewController: UIViewController {
     // MARK: - Properties
     
     private let questionManager = MokQuestionManager()
-    private var questionCount: Int = 0
-    private var resultQuestionCount: Int = 0
+    private var statisticService: StatisticService!
+    private var questionCount: Int = {
+        return UserDefaults.standard.integer(forKey: "QuestionCountKey")
+    }() {
+        didSet {
+            UserDefaults.standard.setValue(questionCount, forKey: "QuestionCountKey")
+        }
+    }
+    private var resultQuestionCount: Int = {
+        return UserDefaults.standard.integer(forKey: "ResultQuestionCountKey")
+    }() {
+        didSet {
+            UserDefaults.standard.setValue(resultQuestionCount, forKey: "ResultQuestionCountKey")
+        }
+    }
+    
     
     // MARK: - Lifecycle
     
@@ -89,7 +103,7 @@ final class MovieQuizViewController: UIViewController {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) { [weak self] in
             guard let self else { return }
-            
+            print(resultQuestionCount)
             questionCount += 1
             if questionCount < questionManager.questions.count {
                 setQuestion(question: questionManager.questions[questionCount])
@@ -100,51 +114,24 @@ final class MovieQuizViewController: UIViewController {
     }
     
     private func createAlert() {
-        let alert = UIAlertController(
-            title: "Раунд окончен",
-            message: "Ваш результат: \(resultQuestionCount)/\(questionManager.questions.count)",
-            preferredStyle: .alert
-        )
+        let title = "Раунд окончен"
+        let message = "Ваш результат: \(resultQuestionCount)/\(questionManager.questions.count)"
         
-        let playAgainAction = UIAlertAction(
-            title: "Сыграть еще раз",
-            style: .default,
-            handler: { action in
-                self.resultQuestionCount = 0
-                self.questionCount = 0
-                self.resultQuestionCount = 0
-                self.setQuestion(
-                    question: self.questionManager.questions[self.questionCount]
-                )
-            }
+        let alert = ResultAlertPresenter(title: title, message: message, delegate: self)
+        alert.showAlert(vc: self)
+    }
+    
+    func restartAction() {
+        self.questionCount = 0
+        self.resultQuestionCount = 0
+        self.setQuestion(
+            question: self.questionManager.questions[self.questionCount]
         )
-        
-        alert.addAction(playAgainAction)
-        present(alert, animated: true, completion: nil)
     }
 }
 
-struct Question {
-    let image: String
-    let rating: Double
-    let question: String
-    let answer: Bool
-}
 
-struct MokQuestionManager {
-    let questions: [Question] = [
-        Question(image: "The Godfather", rating: 9.2, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "The Dark Knight", rating: 9, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "Kill Bill", rating: 8.1, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "The Avengers", rating: 8, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "Deadpool", rating: 8, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "The Green Knight", rating: 6.6, question: "Рейтинг этого фильма\n больше чем 6?", answer: true),
-        Question(image: "Old", rating: 5.8, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
-        Question(image: "The Ice Age Adventures of Buck Wild", rating: 4.3, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
-        Question(image: "Tesla", rating: 5.1, question: "Рейтинг этого фильма\n больше чем 6?", answer: false),
-        Question(image: "Vivarium", rating: 5.8, question: "Рейтинг этого фильма\n больше чем 6?", answer: false)
-    ]
-}
+
 
 /*
  Mock-данные
